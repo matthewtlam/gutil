@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package dvaas;
+
+import "p4_pdpi/ir.proto";
+
+// A proto representation of the trace of a packet through a P4 packet
+// processor.
+message PacketTrace {
+  string bmv2_textual_log = 1;
+  repeated Event events = 2;
+}
+
+message Event {
+  oneof event {
+    TableApply table_apply = 1;
+    MarkToDrop mark_to_drop = 2;
+    PacketReplication packet_replication = 3;
+  }
+}
+
+message MarkToDrop {
+  string source_location = 1;
+}
+
+message PacketReplication {
+  int32 number_of_packets_replicated = 1;
+}
+
+message TableApply {
+  string table_name = 1;
+  string hit_or_miss_textual_log = 2;
+
+  message Hit {
+    pdpi.IrTableEntry table_entry = 3;
+  }
+  message Miss {}
+
+  oneof result {
+    Hit hit = 4;
+    Miss miss = 5;
+  }
+}

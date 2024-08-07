@@ -1,0 +1,301 @@
+tables {
+  name: "ipv4_table"
+  match_fields { name: "ipv4_dst" format: IPV4 type: LPM }
+  match_fields { name: "vrf_id" format: STRING type: EXACT }
+  actions { name: "drop" }
+  actions {
+    name: "set_metadata_and_drop"
+    parameters { name: "route_metadata" bitwidth: 6 }
+  }
+  actions {
+    name: "set_nexthop_id"
+    parameters { name: "nexthop_id" format: STRING }
+  }
+  actions {
+    name: "set_nexthop_id_and_metadata"
+    parameters { name: "nexthop_id" format: STRING }
+    parameters { name: "route_metadata" bitwidth: 6 }
+  }
+  actions {
+    name: "set_wcmp_group_id"
+    parameters { name: "wcmp_group_id" format: STRING }
+  }
+  actions {
+    name: "set_wcmp_group_id_and_metadata"
+    parameters { name: "route_metadata" bitwidth: 6 }
+    parameters { name: "wcmp_group_id" format: STRING }
+  }
+  actions { name: "trap" }
+}
+tables {
+  name: "ipv6_table"
+  match_fields { name: "ipv6_dst" format: IPV6 type: LPM }
+  match_fields { name: "vrf_id" format: STRING type: EXACT }
+  actions { name: "drop" }
+  actions {
+    name: "set_metadata_and_drop"
+    parameters { name: "route_metadata" bitwidth: 6 }
+  }
+  actions {
+    name: "set_nexthop_id"
+    parameters { name: "nexthop_id" format: STRING }
+  }
+  actions {
+    name: "set_nexthop_id_and_metadata"
+    parameters { name: "nexthop_id" format: STRING }
+    parameters { name: "route_metadata" bitwidth: 6 }
+  }
+  actions {
+    name: "set_wcmp_group_id"
+    parameters { name: "wcmp_group_id" format: STRING }
+  }
+  actions {
+    name: "set_wcmp_group_id_and_metadata"
+    parameters { name: "route_metadata" bitwidth: 6 }
+    parameters { name: "wcmp_group_id" format: STRING }
+  }
+  actions { name: "trap" }
+}
+tables {
+  name: "l3_admit_table"
+  match_fields { name: "dst_mac" format: MAC type: TERNARY }
+  match_fields { name: "in_port" format: STRING type: EXACT }
+  actions { name: "admit_to_l3" }
+}
+tables {
+  name: "mirror_port_to_pre_session_table"
+  match_fields { name: "mirror_port" format: STRING type: EXACT }
+  actions {
+    name: "set_pre_session"
+    parameters { name: "id" bitwidth: 32 }
+  }
+}
+tables {
+  name: "mirror_session_table"
+  match_fields { name: "mirror_session_id" format: STRING type: EXACT }
+  actions {
+    name: "mirror_as_ipv4_erspan"
+    parameters { name: "dst_ip" format: IPV4 }
+    parameters { name: "dst_mac" format: MAC }
+    parameters { name: "port" format: STRING }
+    parameters { name: "src_ip" format: IPV4 }
+    parameters { name: "src_mac" format: MAC }
+    parameters { name: "tos" bitwidth: 8 }
+    parameters { name: "ttl" bitwidth: 8 }
+  }
+  actions {
+    name: "mirror_with_vlan_tag_and_ipfix_encapsulation"
+    parameters { name: "monitor_port" format: STRING }
+    parameters { name: "monitor_failover_port" format: STRING }
+    parameters { name: "mirror_encap_src_mac" format: MAC }
+    parameters { name: "mirror_encap_dst_mac" format: MAC }
+    parameters {
+      name: "mirror_encap_vlan_id"
+      format: HEX_STRING
+      bitwidth: 16
+    }
+    parameters { name: "mirror_encap_dst_ip" format: IPV6 }
+    parameters { name: "mirror_encap_src_ip" format: IPV6 }
+    parameters {
+      name: "mirror_encap_udp_src_port"
+      format: HEX_STRING
+      bitwidth: 16
+    }
+    parameters {
+      name: "mirror_encap_udp_dst_port"
+      format: HEX_STRING
+      bitwidth: 16
+    }
+  }
+}
+tables {
+  name: "multicast_router_interface_table"
+  match_fields { name: "multicast_replica_instance" bitwidth: 16 type: EXACT }
+  match_fields { name: "multicast_replica_port" format: STRING type: EXACT }
+  actions {
+    name: "set_multicast_src_mac"
+    parameters { name: "src_mac" format: MAC }
+  }
+  actions { name: "l2_multicast_passthrough" }
+  actions { name: "multicast_l2_passthrough" }
+  actions {
+    name: "multicast_set_src_mac"
+    parameters { name: "src_mac" format: MAC }
+  }
+  actions {
+    name: "multicast_set_src_mac_and_vlan_id"
+    parameters { name: "src_mac" format: MAC }
+    parameters {
+      name: "vlan_id"
+      format: HEX_STRING
+      bitwidth: 12
+    }
+  }
+  actions {
+    name: "multicast_set_src_mac_and_dst_mac_and_vlan_id"
+    parameters { name: "src_mac" format: MAC }
+    parameters { name: "dst_mac" format: MAC }
+    parameters {
+      name: "vlan_id"
+      format: HEX_STRING
+      bitwidth: 12
+    }
+  }
+  actions {
+    name: "multicast_set_src_mac_and_preserve_ingress_vlan_id"
+    parameters { name: "src_mac" format: MAC }
+  }
+}
+tables {
+  name: "neighbor_table"
+  match_fields { name: "neighbor_id" format: IPV6 type: EXACT }
+  match_fields { name: "router_interface_id" format: STRING type: EXACT }
+  actions {
+    name: "set_dst_mac"
+    parameters { name: "dst_mac" format: MAC }
+  }
+}
+tables {
+  name: "nexthop_table"
+  match_fields { name: "nexthop_id" format: STRING type: EXACT }
+  # Deprecated. Use `set_ip_nexthop` instead.
+  # TODO: Remove once migration to `set_ip_nexthop` is completed.
+  actions {
+    name: "set_nexthop"
+    parameters { name: "neighbor_id" format: IPV6 }
+    parameters { name: "router_interface_id" format: STRING }
+  }
+  actions {
+    name: "set_ip_nexthop"
+    parameters { name: "neighbor_id" format: IPV6 }
+    parameters { name: "router_interface_id" format: STRING }
+  }
+  actions {
+    name: "set_p2p_tunnel_encap_nexthop"
+    parameters { name: "tunnel_id" format: STRING }
+  }
+  actions {
+    name: "set_ip_nexthop_and_disable_rewrites"
+    parameters { name: "router_interface_id" format: STRING }
+    parameters { name: "neighbor_id" format: IPV6 }
+    parameters { name: "disable_decrement_ttl" bitwidth: 1 }
+    parameters { name: "disable_src_mac_rewrite" bitwidth: 1 }
+    parameters { name: "disable_dst_mac_rewrite" bitwidth: 1 }
+    parameters { name: "disable_vlan_rewrite" bitwidth: 1 }
+  }
+}
+tables {
+  name: "router_interface_table"
+  match_fields { name: "router_interface_id" format: STRING type: EXACT }
+  actions {
+    name: "set_port_and_src_mac"
+    parameters { name: "port" format: STRING }
+    parameters { name: "src_mac" format: MAC }
+  }
+  actions {
+    name: "set_port_and_src_mac_and_vlan_id"
+    parameters { name: "port" format: STRING }
+    parameters { name: "src_mac" format: MAC }
+    parameters { name: "vlan_id" bitwidth: 12 }
+  }
+}
+tables {
+  name: "tunnel_table"
+  match_fields { name: "tunnel_id" format: STRING type: EXACT }
+  actions {
+    name: "mark_for_p2p_tunnel_encap"
+    parameters { name: "encap_dst_ip" format: IPV6 }
+    parameters { name: "encap_src_ip" format: IPV6 }
+    parameters { name: "router_interface_id" format: STRING }
+  }
+}
+tables {
+  name: "vrf_table"
+  match_fields { name: "vrf_id" format: STRING type: EXACT }
+  actions { name: "no_action" }
+}
+
+tables {
+  name: "vlan_table"
+  match_fields { name: "vlan_id" format: HEX_STRING type: EXACT bitwidth: 12 }
+  actions { name: "no_action" }
+}
+
+tables {
+  name: "vlan_membership_table"
+  match_fields { name: "vlan_id" format: HEX_STRING type: EXACT bitwidth: 12 }
+  match_fields { name: "port" format: STRING type: EXACT }
+  actions { name: "make_tagged_member" }
+  actions { name: "make_untagged_member" }
+}
+
+tables {
+  name: "wcmp_group_table"
+  match_fields { name: "wcmp_group_id" format: STRING type: EXACT }
+  actions {
+    name: "set_nexthop_id"
+    parameters { name: "nexthop_id" format: STRING }
+  }
+}
+tables {
+  name: "ipv6_tunnel_termination_table"
+  match_fields { name: "dst_ipv6" format: IPV6 type: TERNARY }
+  match_fields { name: "src_ipv6" format: IPV6 type: TERNARY }
+  actions { name: "tunnel_decap" }
+}
+tables {
+  name: "disable_vlan_checks_table"
+  match_fields {
+    name: "dummy_match"
+    format: HEX_STRING
+    bitwidth: 1
+    type: TERNARY
+  }
+  actions { name: "disable_vlan_checks" }
+}
+tables {
+  name: "disable_ingress_vlan_checks_table"
+  match_fields {
+    name: "dummy_match"
+    format: HEX_STRING
+    bitwidth: 1
+    type: LPM
+  }
+  actions { name: "disable_ingress_vlan_checks" }
+}
+tables {
+  name: "disable_egress_vlan_checks_table"
+  match_fields {
+    name: "dummy_match"
+    format: HEX_STRING
+    bitwidth: 1
+    type: LPM
+  }
+  actions { name: "disable_egress_vlan_checks" }
+}
+tables {
+  name: "ipv4_multicast_table"
+  match_fields { name: "ipv4_dst" format: IPV4 type: EXACT }
+  match_fields { name: "vrf_id" format: STRING type: EXACT }
+  actions {
+    name: "set_multicast_group_id"
+    parameters {
+      name: "multicast_group_id"
+      format: HEX_STRING
+      bitwidth: 16
+    }
+  }
+}
+tables {
+  name: "ipv6_multicast_table"
+  match_fields { name: "ipv6_dst" format: IPV6 type: EXACT }
+  match_fields { name: "vrf_id" format: STRING type: EXACT }
+  actions {
+    name: "set_multicast_group_id"
+    parameters {
+      name: "multicast_group_id"
+      format: HEX_STRING
+      bitwidth: 16
+    }
+  }
+}

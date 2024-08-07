@@ -1,0 +1,290 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+load("//p4_symbolic/ir:test.bzl", "ir_parsing_test")
+
+package(
+    default_visibility = ["//visibility:public"],
+    licenses = ["notice"],
+)
+
+cc_proto_library(
+    name = "ir_cc_proto",
+    deps = [":ir_proto"],
+)
+
+proto_library(
+    name = "ir_proto",
+    srcs = ["ir.proto"],
+    deps = [
+        "//p4_pdpi:ir_proto",
+        "//p4_symbolic/bmv2:bmv2_proto",
+    ],
+)
+
+cc_library(
+    name = "table_entries",
+    srcs = [
+        "table_entries.cc",
+    ],
+    hdrs = [
+        "table_entries.h",
+    ],
+    deps = [
+        ":ir_cc_proto",
+        "//gutil:status",
+        "//p4_pdpi:ir",
+        "//p4_pdpi:ir_cc_proto",
+        "//p4_pdpi:names",
+        "@com_github_p4lang_p4runtime//:p4runtime_cc_proto",
+        "@com_google_absl//absl/container:btree",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/types:span",
+    ],
+)
+
+cc_library(
+    name = "ir",
+    srcs = [
+        "ir.cc",
+    ],
+    hdrs = [
+        "ir.h",
+    ],
+    deps = [
+        ":cfg",
+        ":ir_cc_proto",
+        ":table_entries",
+        "//gutil:status",
+        "//p4_pdpi:ir_cc_proto",
+        "//p4_pdpi:names",
+        "//p4_pdpi/internal:ordered_map",
+        "//p4_symbolic/bmv2:bmv2_cc_proto",
+        "@com_github_google_glog//:glog",
+        "@com_github_p4lang_p4runtime//:p4info_cc_proto",
+        "@com_github_p4lang_p4runtime//:p4runtime_cc_proto",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:str_format",
+        "@com_google_protobuf//:protobuf",
+    ],
+)
+
+cc_library(
+    name = "cfg",
+    srcs = [
+        "cfg.cc",
+        "ir.h",  # needed for the definition of EndOfPipeline
+    ],
+    hdrs = ["cfg.h"],
+    deps = [
+        ":ir_cc_proto",
+        ":table_entries",
+        "//gutil:status",
+        "//p4_pdpi:ir_cc_proto",
+        "//p4_symbolic/bmv2:bmv2_cc_proto",
+        "@com_github_google_glog//:glog",
+        "@com_github_p4lang_p4runtime//:p4runtime_cc_proto",
+        "@com_google_absl//absl/container:btree",
+        "@com_google_absl//absl/container:node_hash_map",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_protobuf//:protobuf",
+    ],
+)
+
+cc_library(
+    name = "parser",
+    srcs = ["parser.cc"],
+    hdrs = ["parser.h"],
+    deps = [
+        ":ir",
+        ":table_entries",
+        "//p4_pdpi:ir",
+        "//p4_pdpi:ir_cc_proto",
+        "//p4_symbolic/bmv2",
+        "@com_github_p4lang_p4runtime//:p4runtime_cc_proto",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/types:span",
+    ],
+)
+
+cc_test(
+    name = "cfg_test",
+    srcs = ["cfg_test.cc"],
+    deps = [
+        ":cfg",
+        ":ir",
+        ":ir_cc_proto",
+        "//gutil:proto",
+        "//gutil:status_matchers",
+        "@com_google_absl//absl/container:btree",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/strings",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_binary(
+    name = "test",
+    srcs = [
+        "test.cc",
+    ],
+    deps = [
+        ":ir_cc_proto",
+        ":parser",
+        "//gutil:io",
+        "//gutil:proto",
+        "//p4_symbolic:test_util",
+        "@com_google_absl//absl/flags:flag",
+        "@com_google_absl//absl/flags:parse",
+        "@com_google_absl//absl/flags:usage",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/strings:str_format",
+    ],
+)
+
+# Golden file testing rules to test p4_symbolic/ir/ir.cc.
+ir_parsing_test(
+    name = "port_table_test",
+    golden_file = "expected/table.txt",
+    p4_program = "//p4_symbolic/testdata:port-table/table.p4",
+    table_entries = "//p4_symbolic/testdata:port-table/entries.pb.txt",
+)
+
+ir_parsing_test(
+    name = "port_hardcoded_test",
+    golden_file = "expected/hardcoded.txt",
+    p4_program = "//p4_symbolic/testdata:hardcoded/hardcoded.p4",
+)
+
+ir_parsing_test(
+    name = "reflector_test",
+    golden_file = "expected/reflector.txt",
+    p4_program = "//p4_symbolic/testdata:reflector/reflector.p4",
+)
+
+ir_parsing_test(
+    name = "ipv4_routing_test",
+    golden_file = "expected/basic.txt",
+    p4_program = "//p4_symbolic/testdata:ipv4-routing/basic.p4",
+    table_entries = "//p4_symbolic/testdata:ipv4-routing/entries.pb.txt",
+)
+
+ir_parsing_test(
+    name = "set_invalid_test",
+    golden_file = "expected/set_invalid.txt",
+    p4_program = "//p4_symbolic/testdata:set-invalid/set_invalid.p4",
+)
+
+ir_parsing_test(
+    name = "conditional_test",
+    golden_file = "expected/conditional.txt",
+    p4_program = "//p4_symbolic/testdata:conditional/conditional.p4",
+)
+
+ir_parsing_test(
+    name = "conditional_sequence_test",
+    golden_file = "expected/conditional_sequence.txt",
+    p4_program = "//p4_symbolic/testdata:conditional/conditional_sequence.p4",
+)
+
+ir_parsing_test(
+    name = "complex_conditional_test",
+    golden_file = "expected/complex_conditional.txt",
+    p4_program = "//p4_symbolic/testdata:conditional/complex_conditional.p4",
+)
+
+ir_parsing_test(
+    name = "table_hit_1_test",
+    golden_file = "expected/table_hit_1.txt",
+    p4_program = "//p4_symbolic/testdata:conditional/table_hit_1.p4",
+)
+
+ir_parsing_test(
+    name = "table_hit_2_test",
+    golden_file = "expected/table_hit_2.txt",
+    p4_program = "//p4_symbolic/testdata:conditional/table_hit_2.p4",
+)
+
+ir_parsing_test(
+    name = "string_optional_test",
+    golden_file = "expected/string_optional.txt",
+    p4_program = "//p4_symbolic/testdata:string-optional/program.p4",
+)
+
+ir_parsing_test(
+    name = "sai_parser_test",
+    golden_file = "expected/sai_parser.txt",
+    p4_deps = ["//p4_symbolic/testdata:common_p4_includes"],
+    p4_program = "//p4_symbolic/testdata:parser/sai_parser.p4",
+)
+
+ir_parsing_test(
+    name = "extract_parser_operation_test",
+    golden_file = "expected/extract_parser_operation.txt",
+    p4_deps = ["//p4_symbolic/testdata:common_p4_includes"],
+    p4_program = "//p4_symbolic/testdata:parser/extract_parser_operation.p4",
+)
+
+ir_parsing_test(
+    name = "set_parser_operation_test",
+    golden_file = "expected/set_parser_operation.txt",
+    p4_deps = ["//p4_symbolic/testdata:common_p4_includes"],
+    p4_program = "//p4_symbolic/testdata:parser/set_parser_operation.p4",
+)
+
+ir_parsing_test(
+    name = "primitive_parser_operation_test",
+    golden_file = "expected/primitive_parser_operation.txt",
+    p4_deps = ["//p4_symbolic/testdata:common_p4_includes"],
+    p4_program = "//p4_symbolic/testdata:parser/primitive_parser_operation.p4",
+)
+
+ir_parsing_test(
+    name = "default_transition_test",
+    golden_file = "expected/default_transition.txt",
+    p4_deps = ["//p4_symbolic/testdata:common_p4_includes"],
+    p4_program = "//p4_symbolic/testdata:parser/default_transition.p4",
+)
+
+ir_parsing_test(
+    name = "hex_string_transition_test",
+    golden_file = "expected/hex_string_transition.txt",
+    p4_deps = ["//p4_symbolic/testdata:common_p4_includes"],
+    p4_program = "//p4_symbolic/testdata:parser/hex_string_transition.p4",
+)
+
+ir_parsing_test(
+    name = "fall_through_transition_test",
+    golden_file = "expected/fall_through_transition.txt",
+    p4_deps = ["//p4_symbolic/testdata:common_p4_includes"],
+    p4_program = "//p4_symbolic/testdata:parser/fall_through_transition.p4",
+)
+
+# This test is used for the ICMP header patching. It makes sure that, given a
+# partial definition of the ICMP header where the 32-bit `rest_of_header` field
+# is missing, the output IR will still contain the complete ICMP header.
+# TODO: We should remove this test and the corresponding test data
+# when GPINS' last tested version is updated with the complete ICMP definition.
+ir_parsing_test(
+    name = "partial_icmp_test",
+    golden_file = "expected/partial_icmp.txt",
+    p4_program = "//p4_symbolic/testdata:incomplete-header/partial_icmp.p4",
+)

@@ -1,0 +1,601 @@
+#########################################################
+### Test Case: Switch Has Unique Entity
+#########################################################
+
+=== Switch Entities ===
+table_entry {
+  table_name: "golden_table"
+  matches {
+    name: "field1"
+    exact {
+      hex_str: "0xbe0a0bed"
+    }
+  }
+}
+
+=== Fuzzer Entities ===
+
+=== Mask Function ===
+No mask function was used
+
+=== Test Output ===
+FAILED_PRECONDITION: Number of entries on switch does not match number of entries in Fuzzer
+Entries on switch: 1
+Entries in Fuzzer: 0
+The following entry exists on switch but not in Fuzzer:
+table_name: "golden_table"
+matches {
+  name: "field1"
+  exact {
+    hex_str: "0xbe0a0bed"
+  }
+}
+
+
+#########################################################
+### Test Case: Fuzzer Has Unique Entity
+#########################################################
+
+=== Switch Entities ===
+
+=== Fuzzer Entities ===
+table_entry {
+  table_name: "golden_table"
+  matches {
+    name: "field1"
+    exact {
+      hex_str: "0xbe0a0bed"
+    }
+  }
+}
+
+=== Mask Function ===
+No mask function was used
+
+=== Test Output ===
+FAILED_PRECONDITION: Number of entries on switch does not match number of entries in Fuzzer
+Entries on switch: 0
+Entries in Fuzzer: 1
+The following entry exists in Fuzzer but not on switch:
+table_name: "golden_table"
+matches {
+  name: "field1"
+  exact {
+    hex_str: "0xbe0a0bed"
+  }
+}
+
+
+#########################################################
+### Test Case: Switch and Fuzzer entity have same key but different value
+#########################################################
+
+=== Switch Entities ===
+table_entry {
+  table_name: "golden_table"
+  matches {
+    name: "field1"
+    exact {
+      hex_str: "0xbe0a0bed"
+    }
+  }
+}
+
+=== Fuzzer Entities ===
+table_entry {
+  table_name: "golden_table"
+  matches {
+    name: "field1"
+    exact {
+      hex_str: "0xbe0a0bed"
+    }
+  }
+  controller_metadata: "Am cookie, much wow"
+}
+
+=== Mask Function ===
+No mask function was used
+
+=== Test Output ===
+FAILED_PRECONDITION: Entry exists in both switch and Fuzzer, but is different:
+deleted: controller_metadata: "Am cookie, much wow"
+
+Entry on switch:
+table_name: "golden_table"
+matches {
+  name: "field1"
+  exact {
+    hex_str: "0xbe0a0bed"
+  }
+}
+Entry in Fuzzer:
+table_name: "golden_table"
+matches {
+  name: "field1"
+  exact {
+    hex_str: "0xbe0a0bed"
+  }
+}
+controller_metadata: "Am cookie, much wow"
+
+
+#########################################################
+### Test Case: Switch and Fuzzer have same entities
+#########################################################
+
+=== Switch Entities ===
+table_entry {
+  table_name: "golden_table"
+  matches {
+    name: "field1"
+    exact {
+      hex_str: "0xbe0a0bed"
+    }
+  }
+}
+
+=== Fuzzer Entities ===
+table_entry {
+  table_name: "golden_table"
+  matches {
+    name: "field1"
+    exact {
+      hex_str: "0xbe0a0bed"
+    }
+  }
+}
+
+=== Mask Function ===
+No mask function was used
+
+=== Test Output ===
+OK: 
+
+#########################################################
+### Test Case: Missing metadata is ignored due to mask function
+#########################################################
+
+=== Switch Entities ===
+table_entry {
+  table_name: "golden_table"
+  matches {
+    name: "field1"
+    exact {
+      hex_str: "0xbe0a0bed"
+    }
+  }
+}
+
+=== Fuzzer Entities ===
+table_entry {
+  table_name: "golden_table"
+  matches {
+    name: "field1"
+    exact {
+      hex_str: "0xbe0a0bed"
+    }
+  }
+  controller_metadata: "Am cookie, much wow"
+}
+
+=== Mask Function ===
+Mask ignores metadata field
+
+=== Test Output ===
+OK: 
+
+#########################################################
+### Test Case: Summary With No Resource Limits Hit
+### info: A single entry added to lpm1 table.
+#########################################################
+
+=== Switch State Summary ===
+State(
+ current size   max size seen   guaranteed size    table_name
+            1               1               N/A    total number of table entries
+            0               0              1024    id_test_table
+            0               0              1024    exact_table
+            0               0              1024    ternary_table
+            1               1              1024    lpm1_table
+            0               0              1024    lpm2_table
+            0               0              1024    wcmp_table
+            0               0              1024    wcmp_table.total_weight
+          N/A               0                 0    wcmp_table.max_group_weight*
+            0               0                 0    wcmp_table.total_members
+          N/A               0                 0    wcmp_table.max_members_per_group
+            0               0              1024    count_and_meter_table
+            0               0              1024    wcmp2_table
+            0               0              1024    wcmp2_table.total_weight
+          N/A               0                 0    wcmp2_table.max_group_weight*
+            0               0                 0    wcmp2_table.total_members
+          N/A               0                 0    wcmp2_table.max_members_per_group
+            0               0              1024    optional_table
+            0               0              1024    no_action_table
+            0               0              1024    unsupported_table
+            0               0              1024    packet_count_and_meter_table
+            0               0              1024    byte_count_and_meter_table
+            0               0              1024    two_match_fields_table
+            0               0              1024    golden_test_friendly_wcmp_table
+            0               0              1024    golden_test_friendly_wcmp_table.total_weight
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_group_weight*
+            0               0                 0    golden_test_friendly_wcmp_table.total_members
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_members_per_group
+            0               0              1024    referring_to_referring_by_match_field_table
+            0               0              1024    constrained_table
+            0               0              1024    refers_to_multicast_by_match_field_table
+            0               0              1024    refers_to_multicast_by_action_table
+            0               0              1024    exact_and_optional_table
+            0               0              1024    one_match_field_table
+            0               0              1024    referring_by_action_table
+            0               0              1024    referenced_by_multicast_replica_table
+            0               0              1024    referring_by_match_field_table
+            0               0              1024    golden_test_friendly_table
+            0               0                 0    builtin::multicast_group_table*
+            0               0                 0    builtin::multicast_group_table.total_replicas*
+          N/A               0                 0    builtin::multicast_group_table.max_replicas_per_group*
+ * marks tables where max size >= guaranteed size.
+)
+
+#########################################################
+### Test Case: Summary With Resource Limits Hit using Sum Of Weights Semantics
+### info: Excessive entries added to wcmp table.
+#########################################################
+
+=== Switch State Summary ===
+State(
+ current size   max size seen   guaranteed size    table_name
+         1025            1025               N/A    total number of table entries
+            0               0              1024    id_test_table
+            0               0              1024    exact_table
+            0               0              1024    ternary_table
+            0               0              1024    lpm1_table
+            0               0              1024    lpm2_table
+         1025            1025              1024    wcmp_table*
+        10250           10250              1024    wcmp_table.total_weight*
+          N/A              10                 0    wcmp_table.max_group_weight*
+         1025            1025                 0    wcmp_table.total_members
+          N/A               1                 0    wcmp_table.max_members_per_group
+            0               0              1024    count_and_meter_table
+            0               0              1024    wcmp2_table
+            0               0              1024    wcmp2_table.total_weight
+          N/A               0                 0    wcmp2_table.max_group_weight*
+            0               0                 0    wcmp2_table.total_members
+          N/A               0                 0    wcmp2_table.max_members_per_group
+            0               0              1024    optional_table
+            0               0              1024    no_action_table
+            0               0              1024    unsupported_table
+            0               0              1024    packet_count_and_meter_table
+            0               0              1024    byte_count_and_meter_table
+            0               0              1024    two_match_fields_table
+            0               0              1024    golden_test_friendly_wcmp_table
+            0               0              1024    golden_test_friendly_wcmp_table.total_weight
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_group_weight*
+            0               0                 0    golden_test_friendly_wcmp_table.total_members
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_members_per_group
+            0               0              1024    referring_to_referring_by_match_field_table
+            0               0              1024    constrained_table
+            0               0              1024    refers_to_multicast_by_match_field_table
+            0               0              1024    refers_to_multicast_by_action_table
+            0               0              1024    exact_and_optional_table
+            0               0              1024    one_match_field_table
+            0               0              1024    referring_by_action_table
+            0               0              1024    referenced_by_multicast_replica_table
+            0               0              1024    referring_by_match_field_table
+            0               0              1024    golden_test_friendly_table
+            0               0                 0    builtin::multicast_group_table*
+            0               0                 0    builtin::multicast_group_table.total_replicas*
+          N/A               0                 0    builtin::multicast_group_table.max_replicas_per_group*
+ * marks tables where max size >= guaranteed size.
+)
+
+#########################################################
+### Test Case: Summary With Resource Limits Hit using Sum Of Weights Semantics and all entries cleared.
+### info: Excessive entries added to wcmp table then removed. Still notes that resource limits reached.
+#########################################################
+
+=== Switch State Summary ===
+State(
+ current size   max size seen   guaranteed size    table_name
+            0            1025               N/A    total number of table entries
+            0               0              1024    id_test_table
+            0               0              1024    exact_table
+            0               0              1024    ternary_table
+            0               0              1024    lpm1_table
+            0               0              1024    lpm2_table
+            0            1025              1024    wcmp_table*
+            0           10250              1024    wcmp_table.total_weight*
+          N/A              10                 0    wcmp_table.max_group_weight*
+            0            1025                 0    wcmp_table.total_members
+          N/A               1                 0    wcmp_table.max_members_per_group
+            0               0              1024    count_and_meter_table
+            0               0              1024    wcmp2_table
+            0               0              1024    wcmp2_table.total_weight
+          N/A               0                 0    wcmp2_table.max_group_weight*
+            0               0                 0    wcmp2_table.total_members
+          N/A               0                 0    wcmp2_table.max_members_per_group
+            0               0              1024    optional_table
+            0               0              1024    no_action_table
+            0               0              1024    unsupported_table
+            0               0              1024    packet_count_and_meter_table
+            0               0              1024    byte_count_and_meter_table
+            0               0              1024    two_match_fields_table
+            0               0              1024    golden_test_friendly_wcmp_table
+            0               0              1024    golden_test_friendly_wcmp_table.total_weight
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_group_weight*
+            0               0                 0    golden_test_friendly_wcmp_table.total_members
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_members_per_group
+            0               0              1024    referring_to_referring_by_match_field_table
+            0               0              1024    constrained_table
+            0               0              1024    refers_to_multicast_by_match_field_table
+            0               0              1024    refers_to_multicast_by_action_table
+            0               0              1024    exact_and_optional_table
+            0               0              1024    one_match_field_table
+            0               0              1024    referring_by_action_table
+            0               0              1024    referenced_by_multicast_replica_table
+            0               0              1024    referring_by_match_field_table
+            0               0              1024    golden_test_friendly_table
+            0               0                 0    builtin::multicast_group_table*
+            0               0                 0    builtin::multicast_group_table.total_replicas*
+          N/A               0                 0    builtin::multicast_group_table.max_replicas_per_group*
+ * marks tables where max size >= guaranteed size.
+)
+
+#########################################################
+### Test Case: Summary With Resource Limits Hit using Sum Of Members Semantics
+### info: Excessive entries added to wcmp table.
+#########################################################
+
+=== Switch State Summary ===
+State(
+ current size   max size seen   guaranteed size    table_name
+         1025            1025               N/A    total number of table entries
+            0               0              1024    id_test_table
+            0               0              1024    exact_table
+            0               0              1024    ternary_table
+            0               0              1024    lpm1_table
+            0               0              1024    lpm2_table
+         1025            1025              1024    wcmp_table*
+        10250           10250                 0    wcmp_table.total_weight
+          N/A              10                 0    wcmp_table.max_group_weight
+         1025            1025              1024    wcmp_table.total_members*
+          N/A               1                 0    wcmp_table.max_members_per_group*
+            0               0              1024    count_and_meter_table
+            0               0              1024    wcmp2_table
+            0               0                 0    wcmp2_table.total_weight
+          N/A               0                 0    wcmp2_table.max_group_weight
+            0               0              1024    wcmp2_table.total_members
+          N/A               0                 0    wcmp2_table.max_members_per_group*
+            0               0              1024    optional_table
+            0               0              1024    no_action_table
+            0               0              1024    unsupported_table
+            0               0              1024    packet_count_and_meter_table
+            0               0              1024    byte_count_and_meter_table
+            0               0              1024    two_match_fields_table
+            0               0              1024    golden_test_friendly_wcmp_table
+            0               0                 0    golden_test_friendly_wcmp_table.total_weight
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_group_weight
+            0               0              1024    golden_test_friendly_wcmp_table.total_members
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_members_per_group*
+            0               0              1024    referring_to_referring_by_match_field_table
+            0               0              1024    constrained_table
+            0               0              1024    refers_to_multicast_by_match_field_table
+            0               0              1024    refers_to_multicast_by_action_table
+            0               0              1024    exact_and_optional_table
+            0               0              1024    one_match_field_table
+            0               0              1024    referring_by_action_table
+            0               0              1024    referenced_by_multicast_replica_table
+            0               0              1024    referring_by_match_field_table
+            0               0              1024    golden_test_friendly_table
+            0               0                 0    builtin::multicast_group_table*
+            0               0                 0    builtin::multicast_group_table.total_replicas*
+          N/A               0                 0    builtin::multicast_group_table.max_replicas_per_group*
+ * marks tables where max size >= guaranteed size.
+)
+
+#########################################################
+### Test Case: Summary With Resource Limits Hit using Sum Of Members Semantics and all entries cleared.
+### info: Excessive entries added to wcmp table.
+#########################################################
+
+=== Switch State Summary ===
+State(
+ current size   max size seen   guaranteed size    table_name
+            0            1025               N/A    total number of table entries
+            0               0              1024    id_test_table
+            0               0              1024    exact_table
+            0               0              1024    ternary_table
+            0               0              1024    lpm1_table
+            0               0              1024    lpm2_table
+            0            1025              1024    wcmp_table*
+            0           10250                 0    wcmp_table.total_weight
+          N/A              10                 0    wcmp_table.max_group_weight
+            0            1025              1024    wcmp_table.total_members*
+          N/A               1                 0    wcmp_table.max_members_per_group*
+            0               0              1024    count_and_meter_table
+            0               0              1024    wcmp2_table
+            0               0                 0    wcmp2_table.total_weight
+          N/A               0                 0    wcmp2_table.max_group_weight
+            0               0              1024    wcmp2_table.total_members
+          N/A               0                 0    wcmp2_table.max_members_per_group*
+            0               0              1024    optional_table
+            0               0              1024    no_action_table
+            0               0              1024    unsupported_table
+            0               0              1024    packet_count_and_meter_table
+            0               0              1024    byte_count_and_meter_table
+            0               0              1024    two_match_fields_table
+            0               0              1024    golden_test_friendly_wcmp_table
+            0               0                 0    golden_test_friendly_wcmp_table.total_weight
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_group_weight
+            0               0              1024    golden_test_friendly_wcmp_table.total_members
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_members_per_group*
+            0               0              1024    referring_to_referring_by_match_field_table
+            0               0              1024    constrained_table
+            0               0              1024    refers_to_multicast_by_match_field_table
+            0               0              1024    refers_to_multicast_by_action_table
+            0               0              1024    exact_and_optional_table
+            0               0              1024    one_match_field_table
+            0               0              1024    referring_by_action_table
+            0               0              1024    referenced_by_multicast_replica_table
+            0               0              1024    referring_by_match_field_table
+            0               0              1024    golden_test_friendly_table
+            0               0                 0    builtin::multicast_group_table*
+            0               0                 0    builtin::multicast_group_table.total_replicas*
+          N/A               0                 0    builtin::multicast_group_table.max_replicas_per_group*
+ * marks tables where max size >= guaranteed size.
+)
+
+#########################################################
+### Test Case: Summary With No Multicast Resource Guarantees Hit
+### info: A single multicast entry added.
+#########################################################
+
+=== Switch State Summary ===
+State(
+ current size   max size seen   guaranteed size    table_name
+            1               1               N/A    total number of table entries
+            0               0              1024    id_test_table
+            0               0              1024    exact_table
+            0               0              1024    ternary_table
+            0               0              1024    lpm1_table
+            0               0              1024    lpm2_table
+            0               0              1024    wcmp_table
+            0               0              1024    wcmp_table.total_weight
+          N/A               0                 0    wcmp_table.max_group_weight*
+            0               0                 0    wcmp_table.total_members
+          N/A               0                 0    wcmp_table.max_members_per_group
+            0               0              1024    count_and_meter_table
+            0               0              1024    wcmp2_table
+            0               0              1024    wcmp2_table.total_weight
+          N/A               0                 0    wcmp2_table.max_group_weight*
+            0               0                 0    wcmp2_table.total_members
+          N/A               0                 0    wcmp2_table.max_members_per_group
+            0               0              1024    optional_table
+            0               0              1024    no_action_table
+            0               0              1024    unsupported_table
+            0               0              1024    packet_count_and_meter_table
+            0               0              1024    byte_count_and_meter_table
+            0               0              1024    two_match_fields_table
+            0               0              1024    golden_test_friendly_wcmp_table
+            0               0              1024    golden_test_friendly_wcmp_table.total_weight
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_group_weight*
+            0               0                 0    golden_test_friendly_wcmp_table.total_members
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_members_per_group
+            0               0              1024    referring_to_referring_by_match_field_table
+            0               0              1024    constrained_table
+            0               0              1024    refers_to_multicast_by_match_field_table
+            0               0              1024    refers_to_multicast_by_action_table
+            0               0              1024    exact_and_optional_table
+            0               0              1024    one_match_field_table
+            0               0              1024    referring_by_action_table
+            0               0              1024    referenced_by_multicast_replica_table
+            0               0              1024    referring_by_match_field_table
+            0               0              1024    golden_test_friendly_table
+            1               1               256    builtin::multicast_group_table
+            4               4              2048    builtin::multicast_group_table.total_replicas
+          N/A               4                 8    builtin::multicast_group_table.max_replicas_per_group
+ * marks tables where max size >= guaranteed size.
+)
+
+#########################################################
+### Test Case: Summary With Multicast Resource Guarantees Hit
+### info: Excessive entries and replicas added to mulitcast group table.
+#########################################################
+
+=== Switch State Summary ===
+State(
+ current size   max size seen   guaranteed size    table_name
+          257             257               N/A    total number of table entries
+            0               0              1024    id_test_table
+            0               0              1024    exact_table
+            0               0              1024    ternary_table
+            0               0              1024    lpm1_table
+            0               0              1024    lpm2_table
+            0               0              1024    wcmp_table
+            0               0              1024    wcmp_table.total_weight
+          N/A               0                 0    wcmp_table.max_group_weight*
+            0               0                 0    wcmp_table.total_members
+          N/A               0                 0    wcmp_table.max_members_per_group
+            0               0              1024    count_and_meter_table
+            0               0              1024    wcmp2_table
+            0               0              1024    wcmp2_table.total_weight
+          N/A               0                 0    wcmp2_table.max_group_weight*
+            0               0                 0    wcmp2_table.total_members
+          N/A               0                 0    wcmp2_table.max_members_per_group
+            0               0              1024    optional_table
+            0               0              1024    no_action_table
+            0               0              1024    unsupported_table
+            0               0              1024    packet_count_and_meter_table
+            0               0              1024    byte_count_and_meter_table
+            0               0              1024    two_match_fields_table
+            0               0              1024    golden_test_friendly_wcmp_table
+            0               0              1024    golden_test_friendly_wcmp_table.total_weight
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_group_weight*
+            0               0                 0    golden_test_friendly_wcmp_table.total_members
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_members_per_group
+            0               0              1024    referring_to_referring_by_match_field_table
+            0               0              1024    constrained_table
+            0               0              1024    refers_to_multicast_by_match_field_table
+            0               0              1024    refers_to_multicast_by_action_table
+            0               0              1024    exact_and_optional_table
+            0               0              1024    one_match_field_table
+            0               0              1024    referring_by_action_table
+            0               0              1024    referenced_by_multicast_replica_table
+            0               0              1024    referring_by_match_field_table
+            0               0              1024    golden_test_friendly_table
+          257             257               256    builtin::multicast_group_table*
+         2313            2313              2048    builtin::multicast_group_table.total_replicas*
+          N/A               9                 8    builtin::multicast_group_table.max_replicas_per_group*
+ * marks tables where max size >= guaranteed size.
+)
+
+#########################################################
+### Test Case: Summary With Multicast Resource Limits Hit and all entries cleared.
+### info: Excessive entries and replicas added to mulitcast group table.
+#########################################################
+
+=== Switch State Summary ===
+State(
+ current size   max size seen   guaranteed size    table_name
+            0             257               N/A    total number of table entries
+            0               0              1024    id_test_table
+            0               0              1024    exact_table
+            0               0              1024    ternary_table
+            0               0              1024    lpm1_table
+            0               0              1024    lpm2_table
+            0               0              1024    wcmp_table
+            0               0              1024    wcmp_table.total_weight
+          N/A               0                 0    wcmp_table.max_group_weight*
+            0               0                 0    wcmp_table.total_members
+          N/A               0                 0    wcmp_table.max_members_per_group
+            0               0              1024    count_and_meter_table
+            0               0              1024    wcmp2_table
+            0               0              1024    wcmp2_table.total_weight
+          N/A               0                 0    wcmp2_table.max_group_weight*
+            0               0                 0    wcmp2_table.total_members
+          N/A               0                 0    wcmp2_table.max_members_per_group
+            0               0              1024    optional_table
+            0               0              1024    no_action_table
+            0               0              1024    unsupported_table
+            0               0              1024    packet_count_and_meter_table
+            0               0              1024    byte_count_and_meter_table
+            0               0              1024    two_match_fields_table
+            0               0              1024    golden_test_friendly_wcmp_table
+            0               0              1024    golden_test_friendly_wcmp_table.total_weight
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_group_weight*
+            0               0                 0    golden_test_friendly_wcmp_table.total_members
+          N/A               0                 0    golden_test_friendly_wcmp_table.max_members_per_group
+            0               0              1024    referring_to_referring_by_match_field_table
+            0               0              1024    constrained_table
+            0               0              1024    refers_to_multicast_by_match_field_table
+            0               0              1024    refers_to_multicast_by_action_table
+            0               0              1024    exact_and_optional_table
+            0               0              1024    one_match_field_table
+            0               0              1024    referring_by_action_table
+            0               0              1024    referenced_by_multicast_replica_table
+            0               0              1024    referring_by_match_field_table
+            0               0              1024    golden_test_friendly_table
+            0             257               256    builtin::multicast_group_table*
+            0            2313              2048    builtin::multicast_group_table.total_replicas*
+          N/A               9                 8    builtin::multicast_group_table.max_replicas_per_group*
+ * marks tables where max size >= guaranteed size.
+)

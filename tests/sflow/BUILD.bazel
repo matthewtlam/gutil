@@ -1,0 +1,154 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+package(
+    default_visibility = ["//visibility:public"],
+    licenses = ["notice"],
+)
+
+cc_library(
+    name = "sflow_test",
+    testonly = True,
+    srcs = ["sflow_test.cc"],
+    hdrs = ["sflow_test.h"],
+    deps = [
+        ":sflow_breakout_test",
+        ":sflow_util",
+        "//gutil:collections",
+        "//gutil:status_matchers",
+        "//gutil:testing",
+        "//lib:ixia_helper",
+        "//lib/gnmi:gnmi_helper",
+        "//lib/utils:json_utils",
+        "//lib/validator:validator_lib",
+        "//p4_pdpi:ir",
+        "//p4_pdpi:ir_cc_proto",
+        "//p4_pdpi:p4_runtime_session",
+        "//p4_pdpi:p4_runtime_session_extras",
+        "//p4_pdpi:pd",
+        "//p4_pdpi/netaddr:ipv4_address",
+        "//p4_pdpi/netaddr:mac_address",
+        "//p4_pdpi/packetlib",
+        "//p4_pdpi/packetlib:packetlib_cc_proto",
+        "//sai_p4/instantiations/google:sai_pd_cc_proto",
+        "//tests:thinkit_sanity_tests",
+        "//tests/forwarding:group_programming_util",
+        "//tests/forwarding:util",
+        "//tests/integration/system/nsf:compare_p4flows",
+        "//tests/integration/system/nsf:util",
+        "//tests/integration/system/nsf/interfaces:image_config_params",
+        "//tests/integration/system/nsf/interfaces:testbed",
+        "//tests/lib:p4rt_fixed_table_programming_helper",
+        "//tests/lib:switch_test_setup_helpers",
+        "//tests/qos:gnmi_parsers",
+        "//tests/qos:qos_test_util",
+        "//thinkit:generic_testbed",
+        "//thinkit:generic_testbed_fixture",
+        "//thinkit:mirror_testbed",
+        "//thinkit:mirror_testbed_fixture",
+        "//thinkit:ssh_client",
+        "//thinkit:switch",
+        "//thinkit:test_environment",
+        "//thinkit/proto:generic_testbed_cc_proto",
+        "@com_github_gnmi//proto/gnmi:gnmi_cc_grpc_proto",
+        "@com_github_google_glog//:glog",
+        "@com_github_p4lang_p4runtime//:p4info_cc_proto",
+        "@com_github_p4lang_p4runtime//:p4runtime_cc_proto",
+        "@com_google_absl//absl/cleanup",
+        "@com_google_absl//absl/container:flat_hash_map",
+        "@com_google_absl//absl/container:flat_hash_set",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:str_format",
+        "@com_google_absl//absl/synchronization",
+        "@com_google_absl//absl/time",
+        "@com_google_absl//absl/types:span",
+        "@com_google_googletest//:gtest",
+    ],
+    alwayslink = True,
+)
+
+cc_library(
+    name = "sflow_util",
+    testonly = True,
+    srcs = ["sflow_util.cc"],
+    hdrs = ["sflow_util.h"],
+    deps = [
+        "//lib/gnmi:gnmi_helper",
+        "//lib/utils:json_utils",
+        "//lib/validator:validator_lib",
+        "//p4_pdpi/netaddr:ipv4_address",
+        "//p4_pdpi/netaddr:ipv6_address",
+        "//thinkit:ssh_client",
+        "@com_github_gnmi//proto/gnmi:gnmi_cc_grpc_proto",
+        "@com_github_google_glog//:glog",
+        "@com_github_nlohmann_json//:nlohmann_json",
+        "@com_google_absl//absl/container:btree",
+        "@com_google_absl//absl/container:flat_hash_map",
+        "@com_google_absl//absl/container:flat_hash_set",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/time",
+        "@com_google_absl//absl/types:span",
+        "@com_googlesource_code_re2//:re2",
+    ],
+)
+
+cc_library(
+    name = "sflow_breakout_test",
+    testonly = True,
+    srcs = ["sflow_breakout_test.cc"],
+    hdrs = ["sflow_breakout_test.h"],
+    deps = [
+        ":sflow_util",
+        "//gutil:status",
+        "//lib/gnmi:gnmi_helper",
+        "//lib/validator:validator_lib",
+        "//tests:thinkit_gnmi_interface_util",
+        "//tests:thinkit_gnmi_subscribe_tests",
+        "//thinkit:switch",
+        "@com_github_gnmi//proto/gnmi:gnmi_cc_grpc_proto",
+        "@com_github_gnmi//proto/gnmi:gnmi_cc_proto",
+        "@com_github_google_glog//:glog",
+        "@com_github_grpc_grpc//:grpc++",
+        "@com_github_p4lang_p4runtime//:p4info_cc_proto",
+        "@com_google_absl//absl/container:flat_hash_map",
+        "@com_google_absl//absl/container:flat_hash_set",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/status:statusor",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/strings:str_format",
+        "@com_google_absl//absl/time",
+        "@com_google_googletest//:gtest",
+    ],
+)
+
+cc_test(
+    name = "sflow_util_test",
+    srcs = ["sflow_util_test.cc"],
+    deps = [
+        ":sflow_util",
+        "//gutil:status_matchers",
+        "//gutil:testing",
+        "//thinkit:mock_ssh_client",
+        "@com_github_gnmi//proto/gnmi:gnmi_cc_grpc_proto",
+        "@com_google_absl//absl/container:flat_hash_set",
+        "@com_google_absl//absl/status",
+        "@com_google_absl//absl/strings",
+        "@com_google_absl//absl/time",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
