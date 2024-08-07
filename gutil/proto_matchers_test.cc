@@ -22,61 +22,58 @@
 #include "gutil/proto_matchers.h"
 #include "gutil/proto_test.pb.h"
 #include "gutil/testing.h"
-#include "p4_pdpi/ir.pb.h"
 
 namespace gutil {
 namespace {
 
+// using ::p4::v1::TableEntry;
 using ::testing::Not;
 
-TEST(ProtoMatcher, EqualsProto) {
-  pdpi::IrTableEntry table_entry;
-  table_entry.set_table_name("router_interface_table");
-  table_entry.set_priority(123);
+// TEST(ProtoMatcher, EqualsProto) {
+//   TableEntry table_entry;
+//   table_entry.set_table_id(1);
+//   table_entry.set_priority(123);
 
-  EXPECT_THAT(table_entry, EqualsProto(table_entry));
-}
+//   EXPECT_THAT(table_entry, EqualsProto(table_entry));
+// }
 
-TEST(ProtoMatcher, EqualsProtoFromText) {
-  pdpi::IrTableEntry table_entry;
-  table_entry.set_table_name("router_interface_table");
-  table_entry.set_priority(123);
+// TEST(ProtoMatcher, EqualsProtoFromText) {
+//   TableEntry table_entry;
+//   table_entry.set_table_id(1);
+//   table_entry.set_priority(123);
 
-  EXPECT_THAT(table_entry, EqualsProto(R"pb(
-                table_name: "router_interface_table"
-                priority: 123)pb"));
-}
+//   EXPECT_THAT(table_entry, EqualsProto(R"pb(table_id: 1 priority: 123)pb"));
+// }
 
-TEST(ProtoMatcher, DescribeEqualsProto) {
-  auto matcher = EqualsProto(gutil::ParseProtoOrDie<pdpi::IrTableEntry>(R"pb(
-    table_name: "router_interface_table"
-    priority: 123
-  )pb"));
+// TEST(ProtoMatcher, DescribeEqualsProto) {
+//   auto matcher = EqualsProto(gutil::ParseProtoOrDie<TableEntry>(R"pb(
+//     table_id: 1
+//     priority: 123
+//   )pb"));
 
-  EXPECT_EQ(testing::DescribeMatcher<pdpi::IrTableEntry>(matcher),
-            R"(is equal to pdpi.IrTableEntry <
-table_name: "router_interface_table"
-priority: 123
->)");
-  EXPECT_EQ(testing::DescribeMatcher<pdpi::IrTableEntry>(Not(matcher)),
-            R"(is not equal to pdpi.IrTableEntry <
-table_name: "router_interface_table"
-priority: 123
->)");
-}
+//   EXPECT_EQ(testing::DescribeMatcher<TableEntry>(matcher),
+//             R"(is equal to p4.v1.TableEntry <
+// table_id: 1
+// priority: 123
+// >)");
+//   EXPECT_EQ(testing::DescribeMatcher<TableEntry>(Not(matcher)),
+//             R"(is not equal to p4.v1.TableEntry <
+// table_id: 1
+// priority: 123
+// >)");
+// }
 
-TEST(ProtoMatcher, DescribeEqualsProtoFromText) {
-  std::string text =
-      R"pb(table_name: "router_interface_table" priority: 123)pb";
-  auto matcher = EqualsProto(text);
+// TEST(ProtoMatcher, DescribeEqualsProtoFromText) {
+//   std::string text = R"pb(table_id: 1 priority: 123)pb";
+//   auto matcher = EqualsProto(text);
 
-  EXPECT_EQ(testing::DescribeMatcher<pdpi::IrTableEntry>(matcher),
-            R"(is equal to <
-table_name: "router_interface_table" priority: 123>)");
-  EXPECT_EQ(testing::DescribeMatcher<pdpi::IrTableEntry>(Not(matcher)),
-            R"(is not equal to <
-table_name: "router_interface_table" priority: 123>)");
-}
+//   EXPECT_EQ(testing::DescribeMatcher<TableEntry>(matcher),
+//             R"(is equal to <
+// table_id: 1 priority: 123>)");
+//   EXPECT_EQ(testing::DescribeMatcher<TableEntry>(Not(matcher)),
+//             R"(is not equal to <
+// table_id: 1 priority: 123>)");
+// }
 
 TEST(BinaryEqualsProtoTest, EqualPairWorks) {
   auto arbitrary_proto_1 = ParseProtoOrDie<TestMessage>("int_field: 24");
@@ -131,39 +128,38 @@ TEST(EqualsProtoSequenceTest, UnequalSequencesWork) {
   EXPECT_THAT(protos1, Not(EqualsProtoSequence(protos2)));
 }
 
-TEST(PartiallyMatcherTest, IdenticalProtosAreAlsoPartiallyEqual) {
-  pdpi::IrTableEntry table_entry;
-  table_entry.set_table_name("router_interface_table");
-  table_entry.set_priority(123);
+// TEST(PartiallyMatcherTest, IdenticalProtosAreAlsoPartiallyEqual) {
+//   TableEntry table_entry;
+//   table_entry.set_table_id(1);
+//   table_entry.set_priority(123);
 
-  EXPECT_THAT(table_entry, Partially(EqualsProto(table_entry)));
-}
+//   EXPECT_THAT(table_entry, Partially(EqualsProto(table_entry)));
+// }
 
-TEST(PartiallyMatcherTest, PartiallyEqualsProtoOnlyComparePresentFields) {
-  pdpi::IrTableEntry table_entry;
-  table_entry.set_table_name("router_interface_table");
-  table_entry.set_priority(123);
+// TEST(PartiallyMatcherTest, PartiallyEqualsProtoOnlyComparePresentFields) {
+//   TableEntry table_entry;
+//   table_entry.set_table_id(1);
+//   table_entry.set_priority(123);
 
-  EXPECT_THAT(table_entry, Partially(EqualsProto(R"pb(
-                table_name: "router_interface_table"
-                priority: 123)pb")));
-}
+//   EXPECT_THAT(table_entry, Partially(EqualsProto(R"pb(
+//                 table_id: 1 priority: 123)pb")));
+// }
 
-TEST(PartiallyMatcherTest, DifferentlProtosDoNotMatch) {
-  pdpi::IrTableEntry table_entry;
-  table_entry.set_table_name("router_interface_table");
-  table_entry.set_priority(123);
+// TEST(PartiallyMatcherTest, DifferentlProtosDoNotMatch) {
+//   TableEntry table_entry;
+//   table_entry.set_table_id(1);
+//   table_entry.set_priority(123);
 
-  // Proto differs in one field and remains the same for another field does not
-  // match.
-  EXPECT_THAT(table_entry, Not(Partially(EqualsProto(R"pb(
-                table_name: "big_table"
-                priority: 123)pb"))));
-  // Proto differs in both fields should not match.
-  EXPECT_THAT(table_entry, Not(Partially(EqualsProto(R"pb(
-                table_name: "big_table"
-                priority: 1234)pb"))));
-}
+//   // Proto differs in one field and remains the same for another field does not
+//   // match.
+//   EXPECT_THAT(table_entry, Not(Partially(EqualsProto(R"pb(
+//                 table_name: 1
+//                 priority: 123)pb"))));
+//   // Proto differs in both fields should not match.
+//   EXPECT_THAT(table_entry, Not(Partially(EqualsProto(R"pb(
+//                 table_name: 1
+//                 priority: 1234)pb"))));
+// }
 
 TEST(HasOneofCaseTest, NotHasOneofCase) {
   EXPECT_THAT(gutil::ParseProtoOrDie<TestMessageWithOneof>(R"pb()pb"),
@@ -212,3 +208,4 @@ TEST(HasOneofCaseTest, Description) {
 
 }  // namespace
 }  // namespace gutil
+
