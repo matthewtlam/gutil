@@ -89,14 +89,6 @@ def pins_infra_deps():
             strip_prefix = "glog-0.6.0",
             sha256 = "8a83bf982f37bb70825df71a9709fa90ea9f4447fb3c099e1d720a439d88bad6",
         )
-    if not native.existing_rule("com_github_otg_models"):
-        http_archive(
-            name = "com_github_otg_models",
-            url = "https://github.com/open-traffic-generator/models/archive/refs/tags/v0.12.5.zip",
-            strip_prefix = "models-0.12.5",
-            build_file = "@//:bazel/BUILD.otg-models.bazel",
-            sha256 = "1a63e769f1d7f42c79bc1115babf54acbc44761849a77ac28f47a74567f10090",
-        )
 
     # Needed to make glog happy.
     if not native.existing_rule("com_github_gflags_gflags"):
@@ -115,79 +107,12 @@ def pins_infra_deps():
             urls = ["https://github.com/p4lang/p4runtime/archive/6e8c018fe3b5ead2f13b5b665ba1e77beaa1360a.zip"],
             strip_prefix = "p4runtime-6e8c018fe3b5ead2f13b5b665ba1e77beaa1360a/proto",
         )
-    if not native.existing_rule("com_github_p4lang_p4_constraints"):
-        http_archive(
-            name = "com_github_p4lang_p4_constraints",
-            urls = ["https://github.com/p4lang/p4-constraints/archive/5712d1e53c897692d155e0546edfad0baf78eca1.zip"],
-            strip_prefix = "p4-constraints-5712d1e53c897692d155e0546edfad0baf78eca1",
-            sha256 = "e77bc52271b8d6b740c6141eb53c1882d81839f5d050d7ad71f63abf2efdc1c4",
-        )
-    if not native.existing_rule("com_github_nlohmann_json"):
-        http_archive(
-            name = "com_github_nlohmann_json",
-            # JSON for Modern C++
-            url = "https://github.com/nlohmann/json/archive/v3.7.3.zip",
-            strip_prefix = "json-3.7.3",
-            sha256 = "e109cd4a9d1d463a62f0a81d7c6719ecd780a52fb80a22b901ed5b6fe43fb45b",
-            build_file_content = """cc_library(name = "nlohmann_json",
-                                               visibility = ["//visibility:public"],
-                                               hdrs = glob([
-                                                   "include/nlohmann/*.hpp",
-                                                   "include/nlohmann/**/*.hpp",
-                                                   ]),
-                                               includes = ["include"],
-                                              )""",
-        )
-    if not native.existing_rule("com_jsoncpp"):
-        http_archive(
-            name = "com_jsoncpp",
-            url = "https://github.com/open-source-parsers/jsoncpp/archive/1.9.4.zip",
-            strip_prefix = "jsoncpp-1.9.4",
-            build_file = "@//:bazel/BUILD.jsoncpp.bazel",
-            sha256 = "6da6cdc026fe042599d9fce7b06ff2c128e8dd6b8b751fca91eb022bce310880",
-        )
-    if not native.existing_rule("com_gnu_gmp"):
-        http_archive(
-            name = "com_gnu_gmp",
-            urls = [
-                "https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz",
-                "https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz",
-            ],
-            strip_prefix = "gmp-6.2.1",
-            sha256 = "fd4829912cddd12f84181c3451cc752be224643e87fac497b69edddadc49b4f2",
-            build_file = "@//:bazel/BUILD.gmp.bazel",
-        )
-    if not native.existing_rule("com_github_z3prover_z3"):
-        http_archive(
-            name = "com_github_z3prover_z3",
-            url = "https://github.com/Z3Prover/z3/archive/z3-4.8.12.tar.gz",
-            strip_prefix = "z3-z3-4.8.12",
-            sha256 = "e3aaefde68b839299cbc988178529535e66048398f7d083b40c69fe0da55f8b7",
-            build_file = "@//:bazel/BUILD.z3.bazel",
-        )
     if not native.existing_rule("rules_foreign_cc"):
         http_archive(
             name = "rules_foreign_cc",
             sha256 = "d54742ffbdc6924f222d2179f0e10e911c5c659c4ae74158e9fe827aad862ac6",
             strip_prefix = "rules_foreign_cc-0.2.0",
             url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0.2.0.tar.gz",
-        )
-    if not native.existing_rule("rules_proto"):
-        http_archive(
-            name = "rules_proto",
-            urls = [
-                "https://github.com/bazelbuild/rules_proto/archive/5.3.0-21.7.tar.gz",
-            ],
-            strip_prefix = "rules_proto-5.3.0-21.7",
-            sha256 = "dc3fb206a2cb3441b485eb1e423165b231235a1ea9b031b4433cf7bc1fa460dd",
-        )
-    if not native.existing_rule("sonic_swss_common"):
-        # We use `git_repository` over `http_archive` only because this is a private repo
-        # requiring SSH authentication.
-        git_repository(
-            name = "sonic_swss_common",
-            commit = "dc004e3431dbce828894fb24907551160eae7827",
-            remote = "git@github.com:pins/sonic-swss-common.git",
         )
     if not native.existing_rule("rules_pkg"):
         http_archive(
