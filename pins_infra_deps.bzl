@@ -106,34 +106,6 @@ def pins_infra_deps():
             strip_prefix = "gflags-2.2.2",
             sha256 = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf",
         )
-    if not native.existing_rule("com_github_gnmi"):
-        http_archive(
-            name = "com_github_gnmi",
-            # v0.10.0 release; commit-hash:5473f2ef722ee45c3f26eee3f4a44a7d827e3575.
-            url = "https://github.com/openconfig/gnmi/archive/refs/tags/v0.10.0.zip",
-            strip_prefix = "gnmi-0.10.0",
-            patch_args = ["-p1"],
-            patches = [
-                "@com_github_google_pins_infra//:bazel/patches/gnmi-001-fix_virtual_proto_import.patch",
-            ],
-            sha256 = "2231e1cc398a523fa840810fa6fdb8960639f7b91b57bb8f12ed8681e0142a67",
-        )
-    if not native.existing_rule("com_github_gnoi"):
-        http_archive(
-            name = "com_github_gnoi",
-            # Newest commit on main on 2021-11-08.
-            url = "https://github.com/openconfig/gnoi/archive/1ece8ed91a0d5d283219a99eb4dc6c7eadb8f287.zip",
-            strip_prefix = "gnoi-1ece8ed91a0d5d283219a99eb4dc6c7eadb8f287",
-            sha256 = "991ff13a0b28f2cdc2ccb123261e7554d9bcd95c00a127411939a3a8c8a9cc62",
-        )
-    if not native.existing_rule("com_github_p4lang_p4c"):
-        http_archive(
-            name = "com_github_p4lang_p4c",
-            # Newest commit on main on 2024-04-02.
-            url = "https://github.com/p4lang/p4c/archive/7b62006645d89790cbf9508e872aecd6d30881bf.zip",
-            strip_prefix = "p4c-7b62006645d89790cbf9508e872aecd6d30881bf",
-            sha256 = "16e483e19f0b3633f5ce1875c8d93f5b3af6197c70c0549fa118fa4e494e0be9",
-        )
     if not native.existing_rule("com_github_p4lang_p4runtime"):
         # We frequently need bleeding-edge, unreleased version of P4Runtime, so we use a commit
         # rather than a release.

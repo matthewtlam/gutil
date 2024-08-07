@@ -119,12 +119,6 @@ rules_pkg_dependencies()
 
 # == Dependencies needed for testing and formatting only =======================
 
-# -- Load p4c ------------------------------------------------------------------
-
-load("@com_github_p4lang_p4c//:bazel/p4c_deps.bzl", "p4c_deps")
-
-p4c_deps()
-
 load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
 
 boost_deps()
