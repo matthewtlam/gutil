@@ -57,7 +57,7 @@ cc_test(
         ":proto_matchers",
         ":proto_test_cc_proto",
         ":testing",
-        # "@com_github_p4lang_p4runtime//:p4runtime_proto",
+	"@com_github_p4lang_p4runtime//:p4runtime_cc_proto",
 	"@com_google_absl//absl/strings",
         "@com_google_googletest//:gtest_main",
     ],
