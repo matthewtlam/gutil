@@ -15,8 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#ifndef PINS_INFRA_GUTIL_TEST_WRITER_H_
-#define PINS_INFRA_GUTIL_TEST_WRITER_H_
+#ifndef GUTIL_TEST_WRITER_H_
+#define GUTIL_TEST_WRITER_H_
 
 #include <fstream>
 #include <ios>
@@ -84,4 +84,4 @@ class BazelTestArtifactWriter : public TestArtifactWriter {
 
 }  // namespace gutil
 
-#endif  // PINS_INFRA_GUTIL_TEST_WRITER_H_
+#endif  // GUTIL_TEST_WRITER_H_

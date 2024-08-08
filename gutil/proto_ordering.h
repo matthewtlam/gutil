@@ -13,8 +13,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef PINS_INFRA_GUTIL_PROTO_ORDERING_H_
-#define PINS_INFRA_GUTIL_PROTO_ORDERING_H_
+#ifndef GUTIL_PROTO_ORDERING_H_
+#define GUTIL_PROTO_ORDERING_H_
 
 #include <iterator>
 #include <utility>
@@ -81,4 +81,4 @@ void InefficientProtoSortAndDedup(ProtoSequence& messages) {
 
 }  // namespace gutil
 
-#endif  // PINS_INFRA_GUTIL_PROTO_ORDERING_H_
+#endif  // GUTIL_PROTO_ORDERING_H_

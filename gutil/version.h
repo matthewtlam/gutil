@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef PINS_INFRA_GUTIL_VERSION_H_
-#define PINS_INFRA_GUTIL_VERSION_H_
+#ifndef GUTIL_VERSION_H_
+#define GUTIL_VERSION_H_
 
 #include <ostream>
 
@@ -75,4 +75,4 @@ void AbslStringify(Sink& sink, const Version& v) {
 
 }  // namespace gutil
 
-#endif  // PINS_INFRA_GUTIL_VERSION_H_
+#endif  // GUTIL_VERSION_H_

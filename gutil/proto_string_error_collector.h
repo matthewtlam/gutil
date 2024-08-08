@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-#ifndef PINS_INFRA_PROTO_STRING_ERROR_COLLECTOR_H_
-#define PINS_INFRA_PROTO_STRING_ERROR_COLLECTOR_H_
+#ifndef PROTO_STRING_ERROR_COLLECTOR_H_
+#define PROTO_STRING_ERROR_COLLECTOR_H_
 
 #include "absl/strings/string_view.h"
 #include "absl/strings/substitute.h"
@@ -51,4 +51,4 @@ class StringErrorCollector : public google::protobuf::io::ErrorCollector {
 
 }  // namespace gutil
 
-#endif  // PINS_INFRA_PROTO_STRING_ERROR_COLLECTOR_H_
+#endif  // PROTO_STRING_ERROR_COLLECTOR_H_
