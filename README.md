@@ -1,9 +1,8 @@
-![build](https://github.com/pins/pins-infra/workflows/build/badge.svg)
+![build](https://github.com/matthewtlam/gutil/workflows/build/badge.svg)
 
-# PINS Infrastructure
+# Gutil
 
-This repository contains infrastructure and libraries that assist in testing P4
-Integrated Network Stack (PINS) switches.
+This repository contains libraries that assist in testing.
 
 This is a work in progress.
 
