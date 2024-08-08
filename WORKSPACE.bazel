@@ -40,12 +40,6 @@ http_archive(
     ],
 )
 
-# -- Load Rules Foreign CC -----------------------------------------------------
-
-load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
-
-rules_foreign_cc_dependencies()
-
 # -- Load GoLang Rules -----------------------------------------------------
 
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
@@ -110,12 +104,6 @@ rules_proto_grpc_repos()
 load("@com_github_p4lang_p4runtime//:p4runtime_deps.bzl", "p4runtime_deps")
 
 p4runtime_deps()
-
-# -- Load packaging rules ------------------------------------------------------
-
-load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
-
-rules_pkg_dependencies()
 
 # == Dependencies needed for testing and formatting only =======================
 

@@ -20,9 +20,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: Install system dependencies
-      run: ./install_dependencies.sh
-
     - name: Install bazelisk
       run: |
         curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/v1.17.0/$BAZEL"
