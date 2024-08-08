@@ -8,8 +8,8 @@ licenses(["notice"])
 exports_files(["LICENSE"])
 
 bzl_library(
-    name = "pins_infra_deps_bzl",
-    srcs = ["pins_infra_deps.bzl"],
+    name = "gutil_deps_bzl",
+    srcs = ["gutil_deps.bzl"],
 )
 
 buildifier(

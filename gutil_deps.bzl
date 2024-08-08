@@ -1,17 +1,17 @@
 """Third party dependencies.
 
 Please read carefully before adding new dependencies:
-- Any dependency can break all of pins-infra. Please be mindful of that before
+- Any dependency can break all of gutil. Please be mindful of that before
   adding new dependencies. Try to stick to stable versions of widely used libraries.
   Do not depend on private repositories and forks.
 - Fix dependencies to a specific version or commit, so upstream changes cannot break
-  pins-infra. Prefer releases over arbitrary commits when both are available.
+  gutil. Prefer releases over arbitrary commits when both are available.
 """
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-def pins_infra_deps():
+def gutil_deps():
     """Sets up 3rd party workspaces needed to build PINS infrastructure."""
     if not native.existing_rule("com_github_bazelbuild_buildtools"):
         http_archive(
@@ -36,8 +36,8 @@ def pins_infra_deps():
             sha256 = "ba6c53c3924a1d01c663352010e0f73736bad3d99d72108e0f2b1a6466f9be20",
             patch_args = ["-p1"],
             patches = [
-                "@com_github_google_pins_infra//:bazel/patches/grpc-001-fix_file_watcher_race_condition.patch",
-                "@com_github_google_pins_infra//:bazel/patches/grpc-003-fix_go_gazelle_register_toolchain.patch",
+                "@com_github_google_gutil//:bazel/patches/grpc-001-fix_file_watcher_race_condition.patch",
+                "@com_github_google_gutil//:bazel/patches/grpc-003-fix_go_gazelle_register_toolchain.patch",
             ],
         )
     if not native.existing_rule("com_google_absl"):

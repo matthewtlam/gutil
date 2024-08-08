@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-workspace(name = "com_github_google_pins_infra")
+workspace(name = "com_github_google_gutil")
 
 # -- Load buildifier -----------------------------------------------------------
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("pins_infra_deps.bzl", "pins_infra_deps")
+load("gutil_deps.bzl", "gutil_deps")
 
-pins_infra_deps()
+gutil_deps()
 
 # Bazel toolchain to build go-lang.
 http_archive(
