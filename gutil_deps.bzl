@@ -107,4 +107,19 @@ def gutil_deps():
             urls = ["https://github.com/p4lang/p4runtime/archive/6e8c018fe3b5ead2f13b5b665ba1e77beaa1360a.zip"],
             strip_prefix = "p4runtime-6e8c018fe3b5ead2f13b5b665ba1e77beaa1360a/proto",
         )
-
+    if not native.existing_rule("rules_foreign_cc"):
+        http_archive(
+            name = "rules_foreign_cc",
+            sha256 = "d54742ffbdc6924f222d2179f0e10e911c5c659c4ae74158e9fe827aad862ac6",
+            strip_prefix = "rules_foreign_cc-0.2.0",
+            url = "https://github.com/bazelbuild/rules_foreign_cc/archive/0.2.0.tar.gz",
+        )
+    if not native.existing_rule("rules_pkg"):
+        http_archive(
+            name = "rules_pkg",
+            urls = [
+                "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.5.1/rules_pkg-0.5.1.tar.gz",
+                "https://github.com/bazelbuild/rules_pkg/releases/download/0.5.1/rules_pkg-0.5.1.tar.gz",
+            ],
+            sha256 = "a89e203d3cf264e564fcb96b6e06dd70bc0557356eb48400ce4b5d97c2c3720d",
+        )
